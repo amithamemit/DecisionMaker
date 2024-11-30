@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Values for Choice Boxes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Input Values for Your Choice Boxes</h1>
+        
+        <div id="choiceValuesContainer"></div>
+        
+        <button onclick="calculateTotal()">Calculate Total</button>
+        
+        <div id="totalOutcome"></div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const numBoxes = localStorage.getItem('numBoxes');
+            generateChoiceBoxes(numBoxes);
+        }
+
+        function generateChoiceBoxes(numBoxes) {
+            const container = document.getElementById('choiceValuesContainer');
+            container.innerHTML = ''; // Clear any previous content
+
+            for (let i = 1; i <= numBoxes; i++) {
+                const choiceBoxDiv = document.createElement('div');
+                choiceBoxDiv.classList.add('choice-box');
+
+                const name = localStorage.getItem(`nameBox${i}`);
+                const rank = localStorage.getItem(`rankBox${i}`);
+                
+                // Create the label and input for the value
+                const nameLabel = document.createElement('label');
+                nameLabel.textContent = `${name} (Rank: ${rank}):`;
+
+                const valueInput = document.createElement('input');
+                valueInput.type = 'number';
+                valueInput.id = `valueBox${i}`;
+                valueInput.min = '0';
+                valueInput.max = '5';
+                valueInput.placeholder = 'Enter value (0-5)';
+
+                // Append the name and value input to the container
+                choiceBoxDiv.appendChild(nameLabel);
+                choiceBoxDiv.appendChild(valueInput);
+                container.appendChild(choiceBoxDiv);
+            }
+        }
+
+        function calculateTotal() {
+            const numBoxes = localStorage.getItem('numBoxes');
+            let totalOutcome = 0;
+
+            for (let i = 1; i <= numBoxes; i++) {
+                const value = parseFloat(document.getElementById(`valueBox${i}`).value);
+                const rank = parseInt(localStorage.getItem(`rankBox${i}`));
+
+                if (!isNaN(value)) {
+                    totalOutcome += value * rank;
+                }
+            }
+
+            document.getElementById('totalOutcome').textContent = `Total Outcome: ${totalOutcome}`;
+        }
+    </script>
+</body>
+</html>

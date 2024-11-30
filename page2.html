@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Name and Rank Choice Boxes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Name and Rank Your Choice Boxes</h1>
+        
+        <div id="choiceBoxesContainer"></div>
+        
+        <button onclick="nextPage()">Next</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const numBoxes = localStorage.getItem('numBoxes');
+            generateChoiceBoxes(numBoxes);
+        }
+
+        function generateChoiceBoxes(numBoxes) {
+            const container = document.getElementById('choiceBoxesContainer');
+            container.innerHTML = ''; // Clear any previous content
+            
+            for (let i = 1; i <= numBoxes; i++) {
+                const choiceBoxDiv = document.createElement('div');
+                choiceBoxDiv.classList.add('choice-box');
+
+                // Name input
+                const nameLabel = document.createElement('label');
+                nameLabel.textContent = `Name for Choice Box ${i}:`;
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.id = `nameBox${i}`;
+                nameInput.placeholder = `Enter name for Choice ${i}`;
+
+                // Rank input
+                const rankLabel = document.createElement('label');
+                rankLabel.textContent = `Ranking for Choice Box ${i} (1-5):`;
+                const rankInput = document.createElement('input');
+                rankInput.type = 'number';
+                rankInput.id = `rankBox${i}`;
+                rankInput.min = "1";
+                rankInput.max = "5";
+                rankInput.placeholder = "Ranking (1-5)";
+
+                // Append the name and rank inputs
+                choiceBoxDiv.appendChild(nameLabel);
+                choiceBoxDiv.appendChild(nameInput);
+                choiceBoxDiv.appendChild(rankLabel);
+                choiceBoxDiv.appendChild(rankInput);
+                container.appendChild(choiceBoxDiv);
+            }
+        }
+
+        function nextPage() {
+            const numBoxes = localStorage.getItem('numBoxes');
+            let allFilled = true;
+            for (let i = 1; i <= numBoxes; i++) {
+                const name = document.getElementById(`nameBox${i}`).value;
+                const rank = document.getElementById(`rankBox${i}`).value;
+                
+                if (!name || !rank) {
+                    allFilled = false;
+                    break;
+                }
+            }
+
+            if (allFilled) {
+                // Save the names and rankings in localStorage
+                for (let i = 1; i <= numBoxes; i++) {
+                    const name = document.getElementById(`nameBox${i}`).value;
+                    const rank = document.getElementById(`rankBox${i}`).value;
+                    localStorage.setItem(`nameBox${i}`, name);
+                    localStorage.setItem(`rankBox${i}`, rank);
+                }
+
+                window.location.href = 'page3.html'; // Redirect to page 3
+            } else {
+                alert('Please fill in all the names and rankings.');
+            }
+        }
+    </script>
+</body>
+</html>
